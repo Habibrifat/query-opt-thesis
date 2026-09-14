@@ -13,5 +13,5 @@ q3,Nested Loop,,130322,10173.0
 q3,Hash Join,,59945,49042.0
 q3,Seq Scan,orders,303112,242435.0
 q3,Hash,,12360,10047.33
-q3,Seq Scan,customer,12360,10047.33
+q3,Seq Scan,customer,12360,15071.0
 q3,Index Scan,lineitem,8,0.21
