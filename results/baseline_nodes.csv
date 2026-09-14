@@ -1,0 +1,17 @@
+query,node_type,relation,estimated_rows,actual_rows
+q1,Aggregate,,6,4.0
+q1,Gather Merge,,14,12.0
+q1,Sort,,6,4.0
+q1,Aggregate,,6,4.0
+q1,Seq Scan,lineitem,2463410,1972197.0
+q3,Limit,,10,10.0
+q3,Sort,,312773,10.0
+q3,Aggregate,,312773,11620.0
+q3,Gather Merge,,312773,30519.0
+q3,Sort,,130322,10173.0
+q3,Nested Loop,,130322,10173.0
+q3,Hash Join,,59945,49042.0
+q3,Seq Scan,orders,303112,242435.0
+q3,Hash,,12360,10047.33
+q3,Seq Scan,customer,12360,10047.33
+q3,Index Scan,lineitem,8,0.21
