@@ -1,0 +1,7 @@
+query,ml_pred_rows,pg_est_rows,actual_rows,qerr_ml,qerr_pg,note
+q1,10621860.439469364,5912184,5916591,1.8,1.0,full query
+q3,589021.4614891949,313268,31616,18.63,9.91,full query
+q6,213997.14989595345,198166,199334,1.07,1.01,full query
+q5-core,9201382.633522496,36282,36337,253.22,1.0,core w/o r_name='ASIA' (not encodable yet)
+q10-core,147091.80156359353,54112,115563,1.27,2.14,core w/o n_name='GERMANY' (not encodable yet)
+q14-core,946419.0529558633,909150,917418,1.03,1.01,core w/o p_brand LIKE 'PROMO%' (not encodable yet)

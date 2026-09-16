@@ -45,7 +45,9 @@ def load_col_stats(cur):
 
 
 def sample_tables(rng):
-    n = rng.choices([1, 2, 3], weights=[3, 4, 3])[0]
+    # n = rng.choices([1, 2, 3], weights=[3, 4, 3])[0]
+    # n = rng.choices([1, 2, 3, 4, 5], weights=[3, 3, 2, 1, 1])[0]
+    n = rng.choices([1, 2, 3, 4, 5], weights=[5, 4, 2, 1, 1])[0]
     tables = [rng.choice(TABLES)]
     while len(tables) < n:
         cands = [x for t in tables for x in NEIGHBORS[t] if x not in tables]
@@ -135,7 +137,9 @@ def main():
         out_rows.append(featurize(tables, joins, preds) + [body, pg_est, actual])
         pg_qerrs.append(max(max(actual, 1) / pg_est, pg_est / max(actual, 1)))
         done += 1
-        if i % 100 == 0:
+        # if i % 100 == 0:
+        # To this:
+        if i % 10 == 0:
             print(f"  {i}/{N_QUERIES} done | PostgreSQL median q-error so far: {statistics.median(pg_qerrs):.2f}")
 
     fields = [f"f{i}" for i in range(FEAT_DIM)] + ["query", "pg_est_rows", "actual_rows"]
