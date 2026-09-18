@@ -46,8 +46,8 @@ def load_col_stats(cur):
 
 def sample_tables(rng):
     # n = rng.choices([1, 2, 3], weights=[3, 4, 3])[0]
-    # n = rng.choices([1, 2, 3, 4, 5], weights=[3, 3, 2, 1, 1])[0]
-    n = rng.choices([1, 2, 3, 4, 5], weights=[5, 4, 2, 1, 1])[0]
+    n = rng.choices([1, 2, 3, 4, 5], weights=[3, 3, 2, 1, 1])[0]
+    # n = rng.choices([1, 2, 3, 4, 5], weights=[5, 4, 2, 1, 1])[0]
     tables = [rng.choice(TABLES)]
     while len(tables) < n:
         cands = [x for t in tables for x in NEIGHBORS[t] if x not in tables]
