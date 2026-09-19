@@ -1,0 +1,5 @@
+{
+  "model": "XGBoost",
+  "target": "log_ratio",
+  "input_dim": 81
+}

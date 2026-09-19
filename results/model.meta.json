@@ -1,0 +1,5 @@
+{
+  "model": "MLP",
+  "target": "log_ratio",
+  "input_dim": 81
+}
