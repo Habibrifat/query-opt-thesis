@@ -15,7 +15,7 @@ import torch.nn as nn
 from train_common import (BASE, SEEDS, SeedRun, load_split, predict_rows,
                           qerror, pg_baseline, print_block, save_meta)
 
-MODEL_OUT = BASE / "results" / "model.pt"
+MODEL_OUT = BASE / "results" / "mlp_model.pt"
 EPOCHS, BATCH = 150, 64
 VERBOSE_EPOCHS = True   # set False for a clean, seed-only log
 
