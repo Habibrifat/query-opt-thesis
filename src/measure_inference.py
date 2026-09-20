@@ -1,90 +1,119 @@
-import time
-import os
-import torch
-import torch.nn as nn
-import numpy as np
-import lightgbm as lgb
+"""Benchmark: model storage size + inference latency, for ALL 4 models.
 
-def load_mlp_from_state_dict(model_path):
-    """
-    Dynamically reconstructs the exact MLP architecture directly from
-    the saved weights file without needing any class imports.
-    """
-    state_dict = torch.load(model_path, map_location='cpu')
+FIXED vs previous version: only benchmarked MLP + LightGBM. RF and XGBoost
+were missing entirely, so the "is this lightweight enough to run inside a
+live planner" comparison was incomplete. Now loops over every model that
+has a saved artifact (via model_loader.available_models()).
+"""
+import os
+import time
+import csv
+
+import numpy as np
+
+from model_loader import CardModel, BASE, available_models
+
+RESULTS = BASE / "results"
+FEAT_DIM = 81
+N_QUERIES = 1000
+
+
+# def bench_one(name):
+#     model = CardModel(name)
+#     size_kb = os.path.getsize(model.path) / 1024
     
-    weights = [v for k, v in state_dict.items() if 'weight' in k]
-    biases = [v for k, v in state_dict.items() if 'bias' in k]
+#     print(f"=== Evaluating {name.upper()} ===")
+#     print(f"Model Storage Size: {size_kb:.2f} KB")
+
+#     queries = np.random.rand(N_QUERIES, FEAT_DIM).astype(np.float32)
+#     _ = model.raw(queries[:10])  # warm-up
+
+#     t0 = time.perf_counter()
+#     for q in queries:
+#         _ = model.raw(q.reshape(1, -1))
+#     ms = (time.perf_counter() - t0) / N_QUERIES * 1000
     
-    layers = []
-    for i, (w, b) in enumerate(zip(weights, biases)):
-        out_features, in_features = w.shape
-        linear_layer = nn.Linear(in_features, out_features)
-        linear_layer.weight.data.copy_(w)
-        linear_layer.bias.data.copy_(b)
-        layers.append(linear_layer)
+#     print(f"Average Inference Latency: {ms:.4f} ms per query\n")
+#     return name, size_kb, ms
+
+
+# def run_benchmark():
+#     names = available_models()
+#     if not names:
+#         print("No trained models found in results/ — run the train_*.py scripts first.")
+#         return
         
-        # Add ReLU activation between hidden layers
-        if i < len(weights) - 1:
-            layers.append(nn.ReLU())
-            
-    model = nn.Sequential(*layers)
-    model.eval()
+#     print(f"Benchmarking: {', '.join(names)}\n")
     
-    num_features = weights[0].shape[1]
-    return model, num_features
+#     results = []
+#     for name in names:
+#         results.append(bench_one(name))
+
+#     # --- Summary Table ---
+#     print("=" * 55)
+#     print("=== Summary (sorted by inference latency) ===")
+#     print(f"{'Model':<12} | {'Size (KB)':>12} | {'Latency (ms)':>14}")
+#     print("-" * 55)
+    
+#     # Sort results by latency (index 2) to easily see the fastest model
+#     for name, size_kb, ms in sorted(results, key=lambda x: x[2]):
+#         print(f"{name.upper():<12} | {size_kb:>12.2f} | {ms:>14.4f}")
+        
+#     print("=" * 55 + "\n")
+
+def bench_one(name):
+    model = CardModel(name)
+    size_kb = os.path.getsize(model.path) / 1024
+
+    queries = np.random.rand(N_QUERIES, FEAT_DIM).astype(np.float32)
+    _ = model.raw(queries[:100])            # more warm-up
+
+    times = np.empty(N_QUERIES, dtype=np.float64)
+    for i, q in enumerate(queries):
+        t0 = time.perf_counter()
+        _ = model.raw(q.reshape(1, -1))
+        times[i] = (time.perf_counter() - t0) * 1000.0
+
+    print(f"=== Evaluating {name.upper()} ===")
+    print(f"Model Storage Size       : {size_kb:.2f} KB")
+    print(f"Latency mean / median    : {times.mean():.4f} / {np.median(times):.4f} ms")
+    print(f"Latency std / p95 / max  : {times.std():.4f} / "
+          f"{np.percentile(times, 95):.4f} / {times.max():.4f} ms\n")
+
+    return {
+        "model": name, "size_kb": size_kb,
+        "mean_ms":  float(times.mean()),
+        "median_ms":float(np.median(times)),
+        "p95_ms":   float(np.percentile(times, 95)),
+        "max_ms":   float(times.max()),
+    }
+
 
 def run_benchmark():
-    mlp_path = "results/model.pt"
-    lgbm_path = "results/lgbm_model.txt"
-    
-    # -------------------------------------------------------------------------
-    # 1. Benchmark MLP
-    # -------------------------------------------------------------------------
-    print("=== Evaluating MLP ===")
-    mlp_size_kb = os.path.getsize(mlp_path) / 1024
-    print(f"Model Storage Size: {mlp_size_kb:.2f} KB")
-    
-    mlp_model, feature_count = load_mlp_from_state_dict(mlp_path)
-    print(f"Detected Input Features: {feature_count}")
-    
-    # Create test queries with the exact feature count (81)
-    mlp_queries = torch.rand((1000, feature_count), dtype=torch.float32)
-    
-    # Warm-up pass
-    with torch.no_grad():
-        _ = mlp_model(mlp_queries[:10])
-        
-    # Measure inference time
-    start_time = time.perf_counter()
-    with torch.no_grad():
-        for query in mlp_queries:
-            _ = mlp_model(query.unsqueeze(0))
-    end_time = time.perf_counter()
-    
-    mlp_latency_ms = ((end_time - start_time) / len(mlp_queries)) * 1000
-    print(f"Average Inference Latency: {mlp_latency_ms:.4f} ms per query\n")
-    
-    # -------------------------------------------------------------------------
-    # 2. Benchmark LightGBM
-    # -------------------------------------------------------------------------
-    print("=== Evaluating LightGBM ===")
-    lgbm_size_kb = os.path.getsize(lgbm_path) / 1024
-    print(f"Model Storage Size: {lgbm_size_kb:.2f} KB")
-    
-    lgb_model = lgb.Booster(model_file=lgbm_path)
-    lgbm_queries = np.random.rand(1000, feature_count).astype(np.float32)
-    
-    # Warm-up pass
-    _ = lgb_model.predict(lgbm_queries[:10])
-    
-    # Measure inference time
-    start_time = time.perf_counter()
-    for query in lgbm_queries:
-        _ = lgb_model.predict(query.reshape(1, -1))
-    end_time = time.perf_counter()
-    
-    lgbm_latency_ms = ((end_time - start_time) / len(lgbm_queries)) * 1000
-    print(f"Average Inference Latency: {lgbm_latency_ms:.4f} ms per query\n")
+    names = available_models()
+    if not names:
+        print("No trained models found in results/.")
+        return
+
+    print(f"Benchmarking: {', '.join(names)} over {N_QUERIES} random feature vectors.\n")
+    results = [bench_one(n) for n in names]
+
+    print("=" * 78)
+    print("=== Summary (sorted by median latency) ===")
+    print(f"{'Model':<8} | {'Size (KB)':>10} | {'median (ms)':>12} | "
+          f"{'mean (ms)':>10} | {'p95 (ms)':>10} | {'max (ms)':>10}")
+    print("-" * 78)
+    for r in sorted(results, key=lambda x: x["median_ms"]):
+        print(f"{r['model'].upper():<8} | {r['size_kb']:>10.2f} | "
+              f"{r['median_ms']:>12.4f} | {r['mean_ms']:>10.4f} | "
+              f"{r['p95_ms']:>10.4f} | {r['max_ms']:>10.4f}")
+    print("=" * 78 + "\n")
+
+    out = RESULTS / "inference_benchmark.csv"
+    with open(out, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(results[0].keys()))
+        w.writeheader(); w.writerows(results)
+    print(f"Saved -> {out}")
 
 if __name__ == "__main__":
-    run_benchmark() 
+    run_benchmark()

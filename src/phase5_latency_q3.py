@@ -1,18 +1,24 @@
+"""Phase 5 (TPC-H Q3): can the model pick a better JOIN ORDER than PG?
+
+Same fixes as phase5_latency.py: --model {mlp,lgbm,rf,xgb} and
+ratio-corrected scoring (pg_est * exp(raw)) with EXPLAIN per sub-plan.
+Usage:
+  python src/phase5_latency_q3.py --model xgb
+"""
+import argparse
 import statistics
 from datetime import date
 from pathlib import Path
 
 import numpy as np
 import psycopg2
-import torch
-import torch.nn as nn
 
 from config import DB_CONFIG
 from evaluate_tpch import eq_cat, rng_pred
 from gen_training_data import JOIN_EDGES, FEAT_DIM, build_body, featurize, load_col_stats
+from model_loader import CardModel
 
 BASE = Path(__file__).resolve().parent.parent
-MODEL = BASE / "results" / "model.pt"
 
 TABLES_3 = ["customer", "orders", "lineitem"]
 
@@ -37,6 +43,24 @@ def join_clause(t, prefix):
     raise ValueError(f"no join edge available for {t}")
 
 
+def pg_est_of(cur, body):
+    """PostgreSQL's row estimate for an arbitrary FROM/WHERE body."""
+    cur.execute("EXPLAIN (FORMAT JSON) SELECT * " + body)
+    return cur.fetchone()[0][0]["Plan"]["Plan Rows"]
+
+
+def ml_cost(model, cur, steps, preds):
+    """Score a join order: sum of predicted intermediate cardinalities."""
+    total = 0.0
+    for sub in steps:
+        joins = [e for e in JOIN_EDGES if e[0] in sub and e[2] in sub]
+        sub_preds = [p for p in preds if p[0][0] in sub]
+        body = build_body(sub, joins, [p[4] for p in sub_preds])
+        x = [featurize(sub, joins, sub_preds)]
+        total += float(model.predict_rows(x, [pg_est_of(cur, body)])[0])
+    return total
+
+
 def build_sql(cand, pred_sqls):
     if cand["seq"] is not None:
         seq = cand["seq"]
@@ -49,17 +73,6 @@ def build_sql(cand, pred_sqls):
     return sql
 
 
-def ml_cost(model, steps, preds):
-    total = 0.0
-    for sub in steps:
-        joins = [e for e in JOIN_EDGES if e[0] in sub and e[2] in sub]
-        sub_preds = [p for p in preds if p[0][0] in sub]
-        x = torch.tensor([featurize(sub, joins, sub_preds)], dtype=torch.float32)
-        with torch.no_grad():
-            total += float(np.expm1(model(x).item()))
-    return total
-
-
 def exec_time_ms(cur, sql, reps=3):
     times = []
     for _ in range(reps):
@@ -69,6 +82,10 @@ def exec_time_ms(cur, sql, reps=3):
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--model", default="mlp", choices=["mlp", "lgbm", "rf", "xgb"])
+    args = ap.parse_args()
+
     conn = psycopg2.connect(**DB_CONFIG)
     conn.autocommit = True
     cur = conn.cursor()
@@ -83,19 +100,14 @@ def main():
     ]
     pred_sqls = [p[4] for p in preds]
 
-    model = nn.Sequential(
-        nn.Linear(FEAT_DIM, 128), nn.ReLU(),
-        nn.Linear(128, 64), nn.ReLU(),
-        nn.Linear(64, 1),
-    )
-    model.load_state_dict(torch.load(MODEL, weights_only=True))
-    model.eval()
+    model = CardModel(args.model)
 
     cur.execute("SET join_collapse_limit = 1")
+    print(f"model: {model}\n")
     print(f"{'join order':<24}{'ML cost (rows)':>18}{'exec time':>12}")
     results = []
     for cand in CANDIDATES:
-        cost = ml_cost(model, cand["steps"], preds)
+        cost = ml_cost(model, cur, cand["steps"], preds)
         t = exec_time_ms(cur, build_sql(cand, pred_sqls))
         results.append((cand["name"], cost, t))
         print(f"{cand['name']:<24}{cost:>18.0f}{t:>10.1f} ms")
@@ -107,10 +119,12 @@ def main():
 
     best = min(results, key=lambda r: r[1])
     fastest = min(results, key=lambda r: r[2])
-    print(f"\nML chose : {best[0].strip()} ({best[2]:.1f} ms)")
+    print(f"\nML chose                : {best[0].strip()} ({best[2]:.1f} ms)")
     print(f"Actual fastest candidate: {fastest[0].strip()} ({fastest[2]:.1f} ms)")
-    print(f"PG default: {t_default:.1f} ms")
-    print(f"ML ranking correct: {'YES' if best[0] == fastest[0] else 'NO'}")
+    print(f"PG default              : {t_default:.1f} ms")
+    print(f"ML ranking correct      : {'YES' if best[0] == fastest[0] else 'NO'}")
+    print(f"Difference vs PG default: {t_default - best[2]:+.1f} ms "
+          f"({'ML order faster' if best[2] < t_default else 'PG plan faster'})")
     conn.close()
 
 

@@ -1,0 +1,11 @@
+query,actual_rows,pg_est_rows,qerr_pg,note,mlp_pred_rows,qerr_mlp,lgbm_pred_rows,qerr_lgbm,rf_pred_rows,qerr_rf,xgb_pred_rows,qerr_xgb
+q1,5916591,5912184,1.0,full query,7868828.5,1.33,5450773.9,1.09,6442776.5,1.09,6920008.1,1.17
+q3,31616,313268,9.91,full query,93256.0,2.95,114133.7,3.61,228716.0,7.23,279139.1,8.83
+q6,199334,198166,1.01,full query,221415.5,1.11,141284.4,1.41,199402.1,1.0,196775.6,1.01
+q5-core,36337,36282,1.0,core w/o r_name='ASIA' (not encodable yet),48902.2,1.35,2171.6,16.73,21627.0,1.68,9693.1,3.75
+q10-core,115563,54112,2.14,core w/o n_name='GERMANY' (not encodable yet),4739.0,24.39,642.1,179.99,10386.0,11.13,1197.5,96.51
+q14-core,917418,909150,1.01,core w/o p_brand LIKE 'PROMO%' (not encodable yet),181972.3,5.04,792972.7,1.16,842864.5,1.09,827692.1,1.11
+median_mlp,,,1.01,,,2.15
+median_lgbm,,,1.01,,,2.51
+median_rf,,,1.01,,,1.38
+median_xgb,,,1.01,,,2.46
