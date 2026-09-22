@@ -12,7 +12,12 @@ from schema import TABLES, JOIN_EDGES, PRED_COLS
 BASE = Path(__file__).resolve().parent.parent
 OUT = BASE / "results" / "training_data.csv"
 SEED = 42
-N_QUERIES = int(sys.argv[1]) if len(sys.argv) > 1 else 1000
+# N_QUERIES = int(sys.argv[1]) if len(sys.argv) > 1 else 1000
+
+if __name__ == '__main__':
+    N_QUERIES = int(sys.argv[1]) if len(sys.argv) > 1 else 1000
+else:
+    N_QUERIES = 1000 # Default value when imported
 
 TABLE_IDX = {t: i for i, t in enumerate(TABLES)}
 JOIN_IDX = {e: i for i, e in enumerate(JOIN_EDGES)}

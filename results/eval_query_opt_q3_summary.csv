@@ -1,0 +1,5 @@
+model,ml_choice,pg_choice,fastest,ml_correct,pg_correct,rho_ml,rho_pg,ml_time_ms,pg_time_ms,fastest_time_ms
+mlp,left-deep  (c-o-l),left-deep  (c-o-l),right-deep (c-(o-l)),False,False,-0.8660254037844387,nan,1517.755,1517.755,1496.245
+lgbm,left-deep  (c-o-l),left-deep  (c-o-l),right-deep (c-(o-l)),False,False,-0.8660254037844387,nan,1519.63,1519.63,1490.144
+rf,left-deep  (c-o-l),left-deep  (c-o-l),right-deep (c-(o-l)),False,False,-0.8660254037844387,nan,1504.401,1504.401,1471.317
+xgb,left-deep  (c-o-l),left-deep  (c-o-l),left-deep  (o-l-c),False,False,-0.8660254037844387,nan,1503.63,1503.63,1489.326
