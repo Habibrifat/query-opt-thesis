@@ -4,8 +4,176 @@ q1,Gather Merge,,14,12.0
 q1,Sort,,6,4.0
 q1,Aggregate,,6,4.0
 q1,Seq Scan,lineitem,2463410,1972197.0
-q3,Limit,,10,10.0
-q3,Sort,,312773,10.0
+q10,Sort,,54834,37967.0
+q10,Aggregate,,54834,37967.0
+q10,Gather Merge,,54834,114705.0
+q10,Sort,,22848,38235.0
+q10,Hash Join,,22848,38235.0
+q10,Hash Join,,22848,38235.0
+q10,Seq Scan,customer,62500,50000.0
+q10,Hash,,22848,38235.0
+q10,Nested Loop,,22848,38235.0
+q10,Bitmap Heap Scan,orders,23653,19023.0
+q10,Bitmap Index Scan,,56768,57069.0
+q10,Index Scan,lineitem,4,2.01
+q10,Hash,,25,25.0
+q10,Seq Scan,nation,25,25.0
+q11,Sort,,10667,1048.0
+q11,Aggregate,,1,1.0
+q11,Nested Loop,,32000,31680.0
+q11,Nested Loop,,400,396.0
+q11,Seq Scan,nation,1,1.0
+q11,Bitmap Heap Scan,supplier,400,396.0
+q11,Bitmap Index Scan,,400,396.0
+q11,Index Scan,partsupp,80,80.0
+q11,Aggregate,,10667,1048.0
+q11,Nested Loop,,32000,31680.0
+q11,Nested Loop,,400,396.0
+q11,Seq Scan,nation,1,1.0
+q11,Bitmap Heap Scan,supplier,400,396.0
+q11,Bitmap Index Scan,,400,396.0
+q11,Index Scan,partsupp,80,80.0
+q12,Aggregate,,7,2.0
+q12,Gather Merge,,17,6.0
+q12,Aggregate,,7,2.0
+q12,Sort,,12050,10329.33
+q12,Hash Join,,12050,10329.33
+q12,Seq Scan,orders,625000,500000.0
+q12,Hash,,12050,10329.33
+q12,Seq Scan,lineitem,12050,10329.33
+q13,Sort,,200,42.0
+q13,Aggregate,,200,42.0
+q13,Aggregate,,150000,150000.0
+q13,Gather Merge,,360000,344344.0
+q13,Sort,,150000,114781.33
+q13,Aggregate,,150000,114781.33
+q13,Hash Join,,624938,511307.67
+q13,Seq Scan,orders,624938,494639.33
+q13,Hash,,62500,50000.0
+q13,Index Only Scan,customer,62500,50000.0
+q14,Aggregate,,1,1.0
+q14,Gather,,2,3.0
+q14,Aggregate,,1,1.0
+q14,Hash Join,,33713,25327.67
+q14,Bitmap Heap Scan,lineitem,33713,25327.67
+q14,Bitmap Index Scan,,80912,75983.0
+q14,Hash,,83333,66666.67
+q14,Seq Scan,part,83333,66666.67
+q15,Nested Loop,,50,1.0
+q15,Aggregate,,10015,10000.0
+q15,Gather Merge,,24036,29983.0
+q15,Sort,,10015,9994.33
+q15,Aggregate,,10015,9994.33
+q15,Bitmap Heap Scan,lineitem,95463,75318.0
+q15,Bitmap Index Scan,,229111,225954.0
+q15,Aggregate,,1,1.0
+q15,CTE Scan,,10015,10000.0
+q15,CTE Scan,,50,1.0
+q15,Index Scan,supplier,1,1.0
+q16,Sort,,15792,18314.0
+q16,Aggregate,,15792,18314.0
+q16,Gather Merge,,57730,118274.0
+q16,Sort,,24054,39424.67
+q16,Hash Join,,24054,39424.67
+q16,Index Only Scan,partsupp,166667,266560.0
+q16,Seq Scan,supplier,1,4.0
+q16,Hash,,12027,9860.33
+q16,Seq Scan,part,12027,9860.33
+q17,Aggregate,,1,1.0
+q17,Hash Join,,1800,587.0
+q17,Seq Scan,lineitem,6001226,6001215.0
+q17,Hash,,180,204.0
+q17,Gather,,180,204.0
+q17,Seq Scan,part,75,68.0
+q17,Aggregate,,1,1.0
+q17,Bitmap Heap Scan,lineitem,31,30.72
+q17,Bitmap Index Scan,,31,30.72
+q18,Sort,,521306,57.0
+q18,Aggregate,,521306,57.0
+q18,Gather Merge,,521306,399.0
+q18,Incremental Sort,,217211,133.0
+q18,Nested Loop,,217211,133.0
+q18,Merge Join,,54292,19.0
+q18,Sort,,54292,19.0
+q18,Hash Join,,54292,19.0
+q18,Seq Scan,orders,625000,500000.0
+q18,Hash,,130300,57.0
+q18,Aggregate,,130300,57.0
+q18,Index Scan,lineitem,6001226,6001215.0
+q18,Sort,,150000,147882.33
+q18,Seq Scan,customer,150000,150000.0
+q18,Index Scan,lineitem,15,7.0
+q19,Aggregate,,1,1.0
+q19,Gather,,2,3.0
+q19,Aggregate,,1,1.0
+q19,Nested Loop,,46,40.33
+q19,Seq Scan,part,198,161.67
+q19,Index Scan,lineitem,1,0.25
+q2,Sort,,1,460.0
+q2,Hash Join,,1,460.0
+q2,Gather,,764,747.0
+q2,Seq Scan,part,318,249.0
+q2,Hash,,160000,158960.0
+q2,Nested Loop,,160000,158960.0
+q2,Nested Loop,,2000,1987.0
+q2,Hash Join,,5,5.0
+q2,Seq Scan,nation,25,25.0
+q2,Hash,,1,1.0
+q2,Seq Scan,region,1,1.0
+q2,Bitmap Heap Scan,supplier,400,397.4
+q2,Bitmap Index Scan,,400,397.4
+q2,Index Scan,partsupp,80,80.0
+q2,Aggregate,,1,1.0
+q2,Nested Loop,,1,1.06
+q2,Seq Scan,region,1,1.0
+q2,Nested Loop,,4,4.0
+q2,Nested Loop,,4,4.0
+q2,Index Scan,partsupp,4,4.0
+q2,Index Scan,supplier,1,1.0
+q2,Index Scan,nation,1,1.0
+q20,Sort,,108,186.0
+q20,Hash Join,,108,186.0
+q20,Nested Loop,,2693,5833.0
+q20,Seq Scan,part,2020,2127.0
+q20,Index Scan,partsupp,1,2.74
+q20,Aggregate,,1,1.0
+q20,Bitmap Heap Scan,lineitem,1,1.14
+q20,BitmapAnd,,1,0.0
+q20,Bitmap Index Scan,,31,30.01
+q20,Bitmap Index Scan,,599,600.63
+q20,Hash,,400,412.0
+q20,Nested Loop,,400,412.0
+q20,Seq Scan,nation,1,1.0
+q20,Bitmap Heap Scan,supplier,400,412.0
+q20,Bitmap Index Scan,,400,412.0
+q21,Sort,,1,411.0
+q21,Aggregate,,1,411.0
+q21,Sort,,1,4141.0
+q21,Nested Loop,,1,4141.0
+q21,Gather,,1,6923.0
+q21,Nested Loop,,1,2307.67
+q21,Hash Join,,16156,25290.33
+q21,Seq Scan,orders,303312,243137.67
+q21,Hash,,79897,156739.0
+q21,Nested Loop,,79897,156739.0
+q21,Nested Loop,,400,411.0
+q21,Seq Scan,nation,1,1.0
+q21,Bitmap Heap Scan,supplier,400,411.0
+q21,Bitmap Index Scan,,400,411.0
+q21,Index Scan,lineitem,200,381.36
+q21,Index Scan,lineitem,5,0.91
+q21,Index Scan,lineitem,15,0.6
+q22,Aggregate,,726,7.0
+q22,Aggregate,,1,1.0
+q22,Gather,,2,3.0
+q22,Aggregate,,1,1.0
+q22,Seq Scan,customer,1987,12706.67
+q22,Gather Merge,,726,6384.0
+q22,Sort,,302,2128.0
+q22,Nested Loop,,302,2128.0
+q22,Seq Scan,customer,729,6333.33
+q22,Index Only Scan,orders,17,0.66
+q3,Sort,,312773,11620.0
 q3,Aggregate,,312773,11620.0
 q3,Gather Merge,,312773,30519.0
 q3,Sort,,130322,10173.0
@@ -15,3 +183,88 @@ q3,Seq Scan,orders,303112,242435.0
 q3,Hash,,12360,10047.33
 q3,Seq Scan,customer,12360,15071.0
 q3,Index Scan,lineitem,8,0.21
+q4,Aggregate,,5,5.0
+q4,Gather Merge,,12,15.0
+q4,Aggregate,,5,5.0
+q4,Sort,,5970,17507.67
+q4,Nested Loop,,5970,17507.67
+q4,Bitmap Heap Scan,orders,22907,19072.67
+q4,Bitmap Index Scan,,54976,57218.0
+q4,Index Scan,lineitem,5,0.92
+q5,Sort,,25,5.0
+q5,Aggregate,,25,5.0
+q5,Gather Merge,,60,15.0
+q5,Aggregate,,25,5.0
+q5,Sort,,3015,2414.33
+q5,Hash Join,,3015,2414.33
+q5,Nested Loop,,75485,61360.67
+q5,Nested Loop,,18867,15336.0
+q5,Hash Join,,12500,10061.0
+q5,Seq Scan,customer,62500,50000.0
+q5,Hash,,5,5.0
+q5,Hash Join,,5,5.0
+q5,Seq Scan,nation,25,25.0
+q5,Hash,,1,1.0
+q5,Seq Scan,region,1,1.0
+q5,Index Scan,orders,3,1.52
+q5,Index Scan,lineitem,15,4.0
+q5,Hash,,10000,10000.0
+q5,Seq Scan,supplier,10000,10000.0
+q6,Aggregate,,1,1.0
+q6,Gather,,2,3.0
+q6,Aggregate,,1,1.0
+q6,Bitmap Heap Scan,lineitem,46702,38053.33
+q6,Bitmap Index Scan,,905499,909455.0
+q7,Aggregate,,6151,4.0
+q7,Gather Merge,,6151,5924.0
+q7,Sort,,2563,1974.67
+q7,Hash Join,,2563,1974.67
+q7,Nested Loop,,50000,40441.33
+q7,Hash Join,,5000,4002.67
+q7,Seq Scan,customer,62500,50000.0
+q7,Hash,,2,2.0
+q7,Seq Scan,nation,2,2.0
+q7,Index Scan,orders,17,10.1
+q7,Hash,,147797,145703.0
+q7,Nested Loop,,147797,145703.0
+q7,Nested Loop,,800,798.0
+q7,Index Scan,supplier,10000,10000.0
+q7,Memoize,,1,0.08
+q7,Index Scan,nation,1,0.08
+q7,Index Scan,lineitem,185,182.59
+q8,Aggregate,,2406,2.0
+q8,Gather Merge,,3009,2603.0
+q8,Sort,,1254,867.67
+q8,Hash Join,,1254,867.67
+q8,Nested Loop,,1254,867.67
+q8,Hash Join,,1256,867.67
+q8,Nested Loop,,6278,4463.0
+q8,Nested Loop,,6278,4463.0
+q8,Nested Loop,,20592,14564.33
+q8,Seq Scan,part,686,483.67
+q8,Index Scan,lineitem,31,30.11
+q8,Index Scan,orders,1,0.31
+q8,Index Scan,customer,1,1.0
+q8,Hash,,5,5.0
+q8,Hash Join,,5,5.0
+q8,Seq Scan,nation,25,25.0
+q8,Hash,,1,1.0
+q8,Seq Scan,region,1,1.0
+q8,Index Scan,supplier,1,1.0
+q8,Hash,,25,25.0
+q8,Seq Scan,nation,25,25.0
+q9,Aggregate,,149,175.0
+q9,Gather Merge,,149,319404.0
+q9,Sort,,62,106468.0
+q9,Hash Join,,62,106468.0
+q9,Nested Loop,,62,106468.0
+q9,Nested Loop,,62,106468.0
+q9,Nested Loop,,62,106468.0
+q9,Nested Loop,,20202,14218.67
+q9,Seq Scan,part,5050,3554.67
+q9,Index Scan,partsupp,4,4.0
+q9,Index Scan,lineitem,1,7.49
+q9,Index Scan,supplier,1,1.0
+q9,Index Scan,orders,1,1.0
+q9,Hash,,25,25.0
+q9,Seq Scan,nation,25,25.0
