@@ -1,5 +1,5 @@
 {
   "model": "RandomForest",
   "target": "log_ratio",
-  "input_dim": 20
+  "input_dim": 23
 }

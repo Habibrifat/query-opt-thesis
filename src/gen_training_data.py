@@ -592,6 +592,7 @@ PRED_COLS = [
     ("customer", "c_mktsegment", "cat"),
     ("orders",   "o_orderdate",  "date"),
     ("orders",   "o_totalprice", "num"),
+    ("lineitem", "l_shipdate",   "date"),   # <-- add this
     ("lineitem", "l_quantity",   "num"),
     ("lineitem", "l_discount",   "num"),
 ]
