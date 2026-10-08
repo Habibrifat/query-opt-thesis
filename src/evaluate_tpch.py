@@ -49,39 +49,72 @@ def build_specs(st):
 
     return {
         # ---- standard TPC-H cores (in-scope only) ----
-        "q1": dict(
-            tables=["lineitem"], note="lineitem only, shipdate filter",
-            preds=[rng_pred(st, "lineitem", "l_shipdate", smin,
-                            date(1998, 9, 2).toordinal())],
-        ),
-        "q3": dict(
-            tables=["customer", "orders", "lineitem"], note="full 3-table join",
-            preds=[
-                eq_cat(st, "customer", "c_mktsegment", "BUILDING"),
-                rng_pred(st, "orders",   "o_orderdate",
-                         omin, date(1995, 3, 15).toordinal()),
-                rng_pred(st, "lineitem", "l_shipdate",
-                         date(1995, 3, 15).toordinal(), smax),
-            ],
-        ),
-        "q6": dict(
-            tables=["lineitem"], note="lineitem only, shipdate+discount+qty",
-            preds=[
-                rng_pred(st, "lineitem", "l_shipdate",
-                         date(1994, 1, 1).toordinal(),
-                         date(1995, 1, 1).toordinal()),
-                rng_pred(st, "lineitem", "l_discount", 0.02, 0.06),
-                rng_pred(st, "lineitem", "l_quantity",
-                         st[("lineitem", "l_quantity")]["min"], 24.0),
-            ],
-        ),
+        # "q1": dict(
+        #     tables=["lineitem"], note="lineitem only, shipdate filter",
+        #     preds=[rng_pred(st, "lineitem", "l_shipdate", smin,
+        #                     date(1998, 9, 2).toordinal())],
+        # ),
+        # "q3": dict(
+        #     tables=["customer", "orders", "lineitem"], note="full 3-table join",
+        #     preds=[
+        #         eq_cat(st, "customer", "c_mktsegment", "BUILDING"),
+        #         rng_pred(st, "orders",   "o_orderdate",
+        #                  omin, date(1995, 3, 15).toordinal()),
+        #         rng_pred(st, "lineitem", "l_shipdate",
+        #                  date(1995, 3, 15).toordinal(), smax),
+        #     ],
+        # ),
+        # "q6": dict(
+        #     tables=["lineitem"], note="lineitem only, shipdate+discount+qty",
+        #     preds=[
+        #         rng_pred(st, "lineitem", "l_shipdate",
+        #                  date(1994, 1, 1).toordinal(),
+        #                  date(1995, 1, 1).toordinal()),
+        #         rng_pred(st, "lineitem", "l_discount", 0.02, 0.06),
+        #         rng_pred(st, "lineitem", "l_quantity",
+        #                  st[("lineitem", "l_quantity")]["min"], 24.0),
+        #     ],
+        # ),
+        # "my-custom": dict(
+        #     tables=["customer", "orders"],
+        #     note="customer + orders, AUTOMOBILE segment, 1996",
+        #     preds=[
+        #         eq_cat(st, "customer", "c_mktsegment", "AUTOMOBILE"),
+        #         rng_pred(st, "orders", "o_orderdate",
+        #                 date(1996, 1, 1).toordinal(), date(1996, 12, 31).toordinal()),
+        #     ],
+        # ),
+
+        # ---- YOUR CUSTOM QUERY ----
         "my-custom": dict(
-            tables=["customer", "orders"],
-            note="customer + orders, AUTOMOBILE segment, 1996",
+            tables=["lineitem"],
+            note="SELECT * FROM lineitem WHERE l_discount = 0.10;",
+            preds=[
+                eq_num(st, "lineitem", "l_discount", 0.10)
+            ],
+        ),
+
+        # ---- your new query ----
+        "my-3table": dict(
+            tables=["customer", "orders", "lineitem"],
+            note="AUTOMOBILE + l_discount=0.10 (3-table join)",
             preds=[
                 eq_cat(st, "customer", "c_mktsegment", "AUTOMOBILE"),
-                rng_pred(st, "orders", "o_orderdate",
-                        date(1996, 1, 1).toordinal(), date(1996, 12, 31).toordinal()),
+                eq_num(st, "lineitem", "l_discount",   0.10),
+            ],
+        ),
+
+        # Update Query check
+        "q-three-pred": dict(
+            tables=["customer", "orders", "lineitem"],
+            note="BUILDING + orderdate 1995-Q1 + l_quantity<10 (all 3 tables filtered)",
+            preds=[
+                eq_cat(st,  "customer", "c_mktsegment", "BUILDING"),
+                rng_pred(st, "orders",  "o_orderdate",
+                        date(1995, 1, 1).toordinal(),
+                        date(1995, 3, 15).toordinal()),
+                rng_pred(st, "lineitem", "l_quantity",
+                        st[("lineitem", "l_quantity")]["min"], 10.0),
             ],
         ),
 

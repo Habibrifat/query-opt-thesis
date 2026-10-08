@@ -1,9 +1,0 @@
-query,actual_rows,pg_est_rows,qerr_pg,note,mlp_pred_rows,qerr_mlp,lgbm_pred_rows,qerr_lgbm,rf_pred_rows,qerr_rf,xgb_pred_rows,qerr_xgb
-q1,5916591,5912184,1.0,"lineitem only, shipdate filter",6832894.1,1.15,8133326.2,1.37,3449943.9,1.71,3670653.8,1.61
-q3,31616,313268,9.91,full 3-table join,106911.3,3.38,405729.3,12.83,187219.0,5.92,131605.2,4.16
-q6,199334,198166,1.01,"lineitem only, shipdate+discount+qty",188408.3,1.06,102554.5,1.94,181923.0,1.1,192016.5,1.04
-my-custom,45084,46516,1.03,"customer + orders, AUTOMOBILE segment, 1996",47225.9,1.05,42459.6,1.06,46377.0,1.03,46407.8,1.03
-median_mlp,,,1.02,,,1.11
-median_lgbm,,,1.02,,,1.66
-median_rf,,,1.02,,,1.41
-median_xgb,,,1.02,,,1.32
