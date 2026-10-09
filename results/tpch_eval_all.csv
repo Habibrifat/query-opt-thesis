@@ -1,0 +1,6 @@
+query,actual_rows,pg_est_rows,qerr_pg,note,mlp_pred_rows,qerr_mlp,lgbm_pred_rows,qerr_lgbm,rf_pred_rows,qerr_rf,xgb_pred_rows,qerr_xgb
+my-3table,108322,105422,1.03,AUTOMOBILE + l_discount=0.10 (3-table join),112580.3,1.04,103967.5,1.04,115634.1,1.07,105862.8,1.02
+median_mlp,,,1.03,,,1.04
+median_lgbm,,,1.03,,,1.04
+median_rf,,,1.03,,,1.07
+median_xgb,,,1.03,,,1.02
