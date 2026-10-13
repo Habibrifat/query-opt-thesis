@@ -278,16 +278,16 @@ SCENARIOS = {
     ),
 
     # add to SCENARIOS:
-    "three-pred": dict(
-        default_tables=TABLES_3,
-        preds_fn=preds_three_pred,
-        candidates_fn=candidates_3table,
-    ),
-    "machinery-totalprice": dict(
-        default_tables=TABLES_3,
-        preds_fn=preds_machinery_totalprice,
-        candidates_fn=candidates_3table,
-    ),
+    # "three-pred": dict(
+    #     default_tables=TABLES_3,
+    #     preds_fn=preds_three_pred,
+    #     candidates_fn=candidates_3table,
+    # ),
+    # "machinery-totalprice": dict(
+    #     default_tables=TABLES_3,
+    #     preds_fn=preds_machinery_totalprice,
+    #     candidates_fn=candidates_3table,
+    # ),
     
 }
 
