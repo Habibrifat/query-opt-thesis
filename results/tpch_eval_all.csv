@@ -1,10 +1,13 @@
-query,actual_rows,pg_est_rows,qerr_pg,mean_qerr_pg,p95_qerr_pg,mape_pg_pct,median_ape_pg_pct,accuracy_pg_pct,median_accuracy_pg_pct,within_2x_pg_pct,mae_pg_rows,note,mlp_pred_rows,qerr_mlp,lgbm_pred_rows,qerr_lgbm,rf_pred_rows,qerr_rf,xgb_pred_rows,qerr_xgb,mlp_mape_pct,lgbm_mape_pct,rf_mape_pct,xgb_mape_pct,mlp_accuracy_pct,lgbm_accuracy_pct,rf_accuracy_pct,xgb_accuracy_pct,mlp_within_2x_pct,lgbm_within_2x_pct,rf_within_2x_pct,xgb_within_2x_pct,mlp_mae_rows,lgbm_mae_rows,rf_mae_rows,xgb_mae_rows
-q1,5916591,5912184,1.0,1.0,1.0,0.07,0.07,99.96,99.96,100.0,4407.0,"lineitem only, shipdate filter",6832894.1,1.15,8133326.2,1.37,3449943.9,1.71,3670653.8,1.61,15.49,37.47,41.69,37.96,92.81,84.22,73.67,76.57,100.0,100.0,100.0,100.0,916303.11,2216735.22,2466647.14,2245937.15
-q3,30519,312773,10.25,10.25,10.25,924.85,924.85,17.78,17.78,0.0,282254.0,full 3-table join,106742.4,3.5,405088.2,13.27,186923.2,6.12,131397.3,4.31,249.76,1227.33,512.48,330.54,44.47,14.01,28.07,37.7,0.0,0.0,0.0,0.0,76223.39,374569.24,156404.17,100878.28
-q6,114114,112832,1.01,1.01,1.01,1.12,1.12,99.44,99.44,100.0,1282.0,"lineitem only, shipdate+discount+qty",106169.8,1.07,56232.2,2.03,103484.2,1.1,108901.0,1.05,6.96,50.72,9.32,4.57,96.39,66.02,95.11,97.66,100.0,0.0,100.0,100.0,7944.15,57881.85,10629.76,5212.95
-my-custom,45084,46516,1.03,1.03,1.03,3.18,3.18,98.44,98.44,100.0,1432.0,"customer + orders, AUTOMOBILE segment, 1996",47225.9,1.05,42459.6,1.06,46377.0,1.03,46407.8,1.03,4.75,5.82,2.87,2.94,97.68,97.0,98.59,98.55,100.0,100.0,100.0,100.0,2141.88,2624.39,1292.98,1323.81
-summary_postgresql,,,1.0216,3.3231,8.866,232.3053,2.1499,78.9037,98.9359,75.0,72343.75,,,,,,,,,,,,,,,,,,,,,,,,,
-summary_mlp,,,1.1148,1.6937,3.1462,69.2392,11.2243,82.8387,94.6033,75.0,250653.1321,,,,,,,,,,,,,,,,,,,,,,,,,
-summary_lgbm,,,1.702,4.4348,11.5867,330.3354,44.0946,65.3145,75.1217,50.0,662952.672,,,,,,,,,,,,,,,,,,,,,,,,,
-summary_rf,,,1.4089,2.4928,5.4633,141.5887,25.5027,73.8594,84.3901,75.0,658743.5136,,,,,,,,,,,,,,,,,,,,,,,,,
-summary_xgb,,,1.3299,1.9986,3.9014,94.0018,21.2641,77.6216,87.1181,75.0,588338.0472,,,,,,,,,,,,,,,,,,,,,,,,,
+query_or_method,actual_rows,pg_est_rows,qerr_or_median_qerr,accuracy_pct,mean_qerr,p95_qerr,within_2x_pct,note,mlp_pred_rows,qerr_mlp,lgbm_pred_rows,qerr_lgbm,rf_pred_rows,qerr_rf,xgb_pred_rows,qerr_xgb,mlp_accuracy_pct,lgbm_accuracy_pct,rf_accuracy_pct,xgb_accuracy_pct,mlp_within_2x_pct,lgbm_within_2x_pct,rf_within_2x_pct,xgb_within_2x_pct
+q1,5916591,5912184,1.0,99.96,,,100.0,"lineitem only, shipdate filter",5672899.2,1.04,5433963.1,1.09,5912251.9,1.0,6046984.6,1.02,97.9,95.75,99.96,98.91,100.0,100.0,100.0,100.0
+q3,30519,312773,10.25,17.78,,,0.0,full 3-table join,37228.5,1.22,18467.7,1.65,29845.7,1.02,22157.6,1.38,90.1,75.4,98.88,84.13,100.0,100.0,100.0,100.0
+q6,114114,112832,1.01,99.44,,,100.0,"lineitem only, shipdate+discount+qty",108901.4,1.05,92377.0,1.24,113269.9,1.01,107626.2,1.06,97.66,89.47,99.63,97.07,100.0,100.0,100.0,100.0
+my-custom,45084,46516,1.03,98.44,,,100.0,"customer + orders, AUTOMOBILE segment, 1996  (custom)",46720.3,1.04,53176.5,1.18,45554.2,1.01,45970.5,1.02,98.22,91.76,99.48,99.03,100.0,100.0,100.0,100.0
+q-corr-price-qty,370773,862571,2.33,60.12,,,0.0,"3-table join, low totalprice + high l_quantity (anti-correlated)  (custom)",432168.7,1.17,240520.3,1.54,329620.9,1.12,363764.6,1.02,92.35,78.69,94.12,99.05,100.0,100.0,100.0,100.0
+q-high-price-ship,1262,399,3.16,48.04,,,0.0,"3-table join, high totalprice + shipdate + discount=0.02  (custom)",686.0,1.84,855.1,1.48,726.9,1.74,910.2,1.39,70.43,80.78,73.1,83.81,100.0,100.0,100.0,100.0
+q-three-pred-bldg,79210,61275,1.29,87.23,,,100.0,"3-table join, BUILDING + totalprice + l_quantity (1 pred/table)  (custom)",84078.5,1.06,75889.2,1.04,79521.2,1.0,76719.4,1.03,97.02,97.86,99.8,98.4,100.0,100.0,100.0,100.0
+summary_postgresql,,,1.2927,73.0023,2.8678,8.1228,57.1429,aggregate summary for PostgreSQL (n=7 queries),,,,,,,,,,,,,,,,
+summary_mlp,,,1.0615,91.9536,1.202,1.6538,100.0,aggregate summary for mlp (n=7 queries),,,,,,,,,,,,,,,,
+summary_lgbm,,,1.2353,87.1023,1.3168,1.6193,100.0,aggregate summary for lgbm (n=7 queries),,,,,,,,,,,,,,,,
+summary_rf,,,1.0104,94.9978,1.1294,1.5527,100.0,aggregate summary for rf (n=7 queries),,,,,,,,,,,,,,,,
+summary_xgb,,,1.0325,94.3418,1.1311,1.3837,100.0,aggregate summary for xgb (n=7 queries),,,,,,,,,,,,,,,,
